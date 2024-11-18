@@ -513,3 +513,56 @@ function contract_merge_fields_uninstall()
 
     return true;
 }
+
+    function contract_merge_fields_upgrade_database()
+{
+    $CI = &get_instance();
+
+    // SQL for creating the main table if it doesn’t exist
+    $createMainTableSQL = "
+        CREATE TABLE IF NOT EXISTS `tblcustom_merge_tags` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `custom_tag` varchar(255) NOT NULL,
+            `perfex_tag` varchar(255) NOT NULL,
+            `description` text,
+            `category_id` int(11),
+            `is_active` tinyint(1) DEFAULT 1,
+            `display_order` int(11) DEFAULT 0,
+            `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `custom_tag` (`custom_tag`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    ";
+
+    // SQL for creating the categories table if it doesn’t exist
+    $createCategoriesTableSQL = "
+        CREATE TABLE IF NOT EXISTS `tblcustom_merge_tag_categories` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `name` varchar(150) NOT NULL,
+            `description` text,
+            `display_order` int(11) DEFAULT 0,
+            `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    ";
+
+    // Execute the queries
+    $CI->db->query($createMainTableSQL);
+    $CI->db->query($createCategoriesTableSQL);
+
+    // Add foreign key relationship if it doesn’t exist
+    $addForeignKeySQL = "
+        ALTER TABLE `tblcustom_merge_tags`
+        ADD CONSTRAINT `fk_tag_category` 
+        FOREIGN KEY (`category_id`) 
+        REFERENCES `tblcustom_merge_tag_categories` (`id`) 
+        ON DELETE SET NULL;
+    ";
+    try {
+        $CI->db->query($addForeignKeySQL);
+    } catch (Exception $e) {
+        log_message('error', 'Foreign key creation failed or already exists: ' . $e->getMessage());
+    }
+
+    log_message('info', 'Database upgrade for Contract Merge Fields completed.');
+}
