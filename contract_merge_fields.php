@@ -438,28 +438,14 @@ function contract_merge_fields_init()
 {
     $CI = &get_instance();
     
-    log_message('debug', 'Contract Merge Fields init starting');
-    
-    // Run migrations
     if (is_dir(module_dir_path('contract_merge_fields', 'migrations'))) {
-        log_message('debug', 'Migrations directory found');
-        
         $CI->load->config('migration');
         $CI->load->library('migration');
         
-        $migration_path = module_dir_path('contract_merge_fields', 'migrations');
-        log_message('debug', 'Migration path: ' . $migration_path);
-        
-        $CI->config->set_item('migration_path', $migration_path);
+        $CI->config->set_item('migration_path', 
+            module_dir_path('contract_merge_fields', 'migrations'));
             
-        $result = $CI->migration->latest();
-        log_message('debug', 'Migration result: ' . ($result ? 'success' : 'failed'));
-        
-        if ($result === FALSE) {
-            log_message('error', 'Migration Error: ' . $CI->migration->error_string());
-        }
-    } else {
-        log_message('debug', 'Migrations directory not found');
+        $CI->migration->latest();
     }
 }
 
@@ -467,29 +453,14 @@ function contract_merge_fields_activation()
 {
     $CI = &get_instance();
     
-    log_message('debug', 'Contract Merge Fields activation starting');
-    
-    // Run migrations on activation
     if (is_dir(module_dir_path('contract_merge_fields', 'migrations'))) {
-        log_message('debug', 'Activation - Migrations directory found');
-        
         $CI->load->config('migration');
         $CI->load->library('migration');
         
-        $migration_path = module_dir_path('contract_merge_fields', 'migrations');
-        log_message('debug', 'Activation - Migration path: ' . $migration_path);
-        
-        $CI->config->set_item('migration_path', $migration_path);
+        $CI->config->set_item('migration_path', 
+            module_dir_path('contract_merge_fields', 'migrations'));
             
-        $result = $CI->migration->latest();
-        log_message('debug', 'Activation - Migration result: ' . ($result ? 'success' : 'failed'));
-        
-        if ($result === FALSE) {
-            log_message('error', 'Activation - Migration Error: ' . $CI->migration->error_string());
-        }
-    } else {
-        log_message('debug', 'Activation - Migrations directory not found'};
-
+        $CI->migration->latest();
     }
     
     return true;
@@ -499,27 +470,14 @@ function contract_merge_fields_uninstall()
 {
     $CI = &get_instance();
     
-    log_message('debug', 'Contract Merge Fields uninstall starting');
-    
-    // Run down migrations
     if (is_dir(module_dir_path('contract_merge_fields', 'migrations'))) {
-        log_message('debug', 'Uninstall - Migrations directory found');
-        
         $CI->load->config('migration');
         $CI->load->library('migration');
         
         $CI->config->set_item('migration_path', 
             module_dir_path('contract_merge_fields', 'migrations'));
             
-        // This will run all down() methods
-        $result = $CI->migration->version(0);
-        log_message('debug', 'Uninstall - Migration rollback result: ' . ($result ? 'success' : 'failed'));
-        
-        if ($result === FALSE) {
-            log_message('error', 'Uninstall - Migration Error: ' . $CI->migration->error_string());
-        }
-    } else {
-        log_message('debug', 'Uninstall - Migrations directory not found');
+        $CI->migration->version(0);
     }
     
     return true;
