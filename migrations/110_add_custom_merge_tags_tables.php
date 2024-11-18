@@ -5,6 +5,16 @@ class Migration_Add_custom_merge_tags_tables_110 extends App_module_migration
 {
     public function up()
     {
+        log_message('debug', 'Starting custom merge tags migration');
+        
+        try {
+            // Existing migration code...
+            log_message('debug', 'Migration completed successfully');
+        } catch (Exception $e) {
+            log_message('error', 'Migration failed: ' . $e->getMessage());
+            throw $e;
+        }
+
         // Create main mapping table for custom tags
         $this->db->query("
             CREATE TABLE IF NOT EXISTS `tblcustom_merge_tags` (
