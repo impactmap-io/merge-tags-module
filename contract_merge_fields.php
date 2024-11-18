@@ -450,6 +450,8 @@ function contract_merge_fields_init()
     }
 }
 
+
+
 function contract_merge_fields_activation()
 {
     $CI = &get_instance();
@@ -485,4 +487,34 @@ function contract_merge_fields_uninstall()
     }
     
     return true;
+}
+
+
+    function contract_merge_fields_init()
+{
+    $CI = &get_instance();
+    
+    log_message('debug', 'Contract Merge Fields init starting');
+    
+    // Run migrations
+    if (is_dir(module_dir_path('contract_merge_fields', 'migrations'))) {
+        log_message('debug', 'Migrations directory found');
+        
+        $CI->load->config('migration');
+        $CI->load->library('migration');
+        
+        $migration_path = module_dir_path('contract_merge_fields', 'migrations');
+        log_message('debug', 'Migration path: ' . $migration_path);
+        
+        $CI->config->set_item('migration_path', $migration_path);
+            
+        $result = $CI->migration->latest();
+        log_message('debug', 'Migration result: ' . ($result ? 'success' : 'failed'));
+        
+        if ($result === FALSE) {
+            log_message('error', 'Migration Error: ' . $CI->migration->error_string());
+        }
+    } else {
+        log_message('debug', 'Migrations directory not found');
+    }
 }
