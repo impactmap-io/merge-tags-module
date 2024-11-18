@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /*
 * Module Name: Contract Merge Fields
 * Description: Adds a Meta button to easily access merge fields in contracts
-* Version: 1.0.0
+* Version: 1.1.0
 * Requires at least: 3.2.1
 */
 
@@ -436,10 +436,53 @@ function add_meta_fields_panel()
 
 function contract_merge_fields_init()
 {
-    return;
+    $CI = &get_instance();
+    
+    // Run migrations
+    if (is_dir(module_dir_path('contract_merge_fields', 'migrations'))) {
+        $CI->load->config('migration');
+        $CI->load->library('migration');
+        
+        $CI->config->set_item('migration_path', 
+            module_dir_path('contract_merge_fields', 'migrations'));
+            
+        $CI->migration->latest();
+    }
 }
 
 function contract_merge_fields_activation()
 {
+    $CI = &get_instance();
+    
+    // Run migrations on activation
+    if (is_dir(module_dir_path('contract_merge_fields', 'migrations'))) {
+        $CI->load->config('migration');
+        $CI->load->library('migration');
+        
+        $CI->config->set_item('migration_path', 
+            module_dir_path('contract_merge_fields', 'migrations'));
+            
+        $CI->migration->latest();
+    }
+    
+    return true;
+}
+
+function contract_merge_fields_uninstall()
+{
+    $CI = &get_instance();
+    
+    // Run down migrations
+    if (is_dir(module_dir_path('contract_merge_fields', 'migrations'))) {
+        $CI->load->config('migration');
+        $CI->load->library('migration');
+        
+        $CI->config->set_item('migration_path', 
+            module_dir_path('contract_merge_fields', 'migrations'));
+            
+        // This will run all down() methods
+        $CI->migration->version(0);
+    }
+    
     return true;
 }
