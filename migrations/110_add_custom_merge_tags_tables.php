@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Migration_Add_custom_merge_tags_tables extends App_module_migration
+class Migration_Add_custom_merge_tags_tables_110 extends App_module_migration
 {
     public function up()
     {
