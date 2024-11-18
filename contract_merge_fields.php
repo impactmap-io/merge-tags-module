@@ -10,6 +10,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 hooks()->add_action('after_contract_view_as_client_link', 'add_meta_fields_button');
 hooks()->add_action('app_admin_footer', 'add_meta_fields_panel');
+hooks()->add_action('module_upgrade_database', 'contract_merge_fields_upgrade_database');
 
 function add_meta_fields_button($contract)
 {
