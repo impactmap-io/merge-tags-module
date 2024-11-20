@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
-* Module Name: Contract Merge Fields
+* Module Name: Map Merge Fields
 * Description: Adds a Meta button to easily access merge fields in contracts
 * Version: 1.1.0
 * Requires at least: 3.2.1
